@@ -1,0 +1,31 @@
+{
+  "name": "relx-web-api-automation",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=18.20.0"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "test": "npm run test:api && npm run test:web",
+    "test:api": "mocha --require dotenv/config --require ts-node/register --timeout 30000 \"test/specs/api/**/*.api.ts\"",
+    "test:web": "wdio run ./wdio.conf.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.20",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.13.4",
+    "@wdio/cli": "^9.19.2",
+    "@wdio/globals": "^9.19.2",
+    "@wdio/local-runner": "^9.19.2",
+    "@wdio/mocha-framework": "^9.19.2",
+    "@wdio/spec-reporter": "^9.19.2",
+    "@wdio/types": "^9.19.2",
+    "chai": "^4.5.0",
+    "dotenv": "^16.4.7",
+    "mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
