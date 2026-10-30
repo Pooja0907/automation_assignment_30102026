@@ -43,6 +43,8 @@ Type-check the TypeScript project:
 npm run typecheck
 ```
 
+The browser and WebdriverIO configuration uses modern `Bundler` module resolution. API tests run through Mocha and ts-node in CommonJS mode, so they have a dedicated `tsconfig.api.json`; `npm run typecheck` checks both configurations.
+
 The first browser test run may take longer while WebdriverIO downloads Chrome and its matching driver.
 
 ## Configuration

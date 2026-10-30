@@ -8,9 +8,9 @@
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "test": "npm run test:api && npm run test:web",
-    "test:api": "mocha --require dotenv/config --require ts-node/register --timeout 30000 \"test/specs/api/**/*.api.ts\"",
+    "test:api": "mocha --require ./test/api/register.cjs --timeout 30000 \"test/specs/api/**/*.api.ts\"",
     "test:web": "wdio run ./wdio.conf.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && tsc --noEmit --project tsconfig.api.json"
   },
   "devDependencies": {
     "@types/chai": "^4.3.20",

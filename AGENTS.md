@@ -41,5 +41,6 @@
 - Run API tests with `npm run test:api`.
 - Run browser tests with `npm run test:web`.
 - Run both suites with `npm test`.
+- Run `npm run typecheck` to validate both the browser/bundler and API/Node16 TypeScript configurations.
 - WebdriverIO manages the Chrome browser and driver for browser tests; an internet connection is required the first time they are run.
 - Do not claim tests pass unless the relevant command has been run successfully.
