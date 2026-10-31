@@ -85,7 +85,7 @@ describe('Cheapflights flight search', function () {
       expect(await flightSearchForm.getTravellerCount('Infants on lap')).to.equal(testCase.adults);
       expect(await flightSearchForm.isTravellerIncrementDisabled('Infants on lap')).to.equal(true);
       expect(await flightSearchForm.getLapInfantValidationMessage())
-        .to.equal('Searches cannot have more lap infants than adults');
+        .to.equal(testCase.errorMessage);
     });
   }
 

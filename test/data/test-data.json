@@ -40,7 +40,8 @@
         "destination": "Melbourne",
         "destinationCode": "MEL",
         "departureOffsetDays": 14,
-        "adults": 1
+        "adults": 1,
+        "errorMessage": "Searches cannot have more lap infants than adults"
       }
     ],
     "incompleteSearch": [

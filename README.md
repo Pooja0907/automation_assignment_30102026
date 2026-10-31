@@ -61,7 +61,7 @@ The grouped arrays cover valid and malformed booking creation, boundary-value cr
 | `web.flightSearch` | `name`, `origin`, `originCode`, `destination`, `destinationCode`, `departureOffsetDays`, `returnOffsetDays` |
 | `web.flightSearchSwap` | `name`, `origin`, `originCode`, `destination`, `destinationCode`, `departureOffsetDays`, `returnOffsetDays` |
 | `web.sameOriginDestination` | `name`, `origin`, `originCode`, `departureOffsetDays`, `returnOffsetDays` |
-| `web.infantsExceedAdults` | `name`, `origin`, `originCode`, `destination`, `destinationCode`, `departureOffsetDays`, `adults` |
+| `web.infantsExceedAdults` | `name`, `origin`, `originCode`, `destination`, `destinationCode`, `departureOffsetDays`, `adults`, `errorMessage` |
 | `web.incompleteSearch` | `name`, `missingField` (`origin`, `destination`, or `both`) |
 | `web.multiCityBlankSearch` | `name`, `errorMessage` |
 | `api.createValid`, `api.createBoundary`, `api.getExisting`, `api.delete`, `api.deleteUnauthorized` | `name`, `booking` (complete booking payload) |

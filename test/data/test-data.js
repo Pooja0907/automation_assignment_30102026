@@ -11,7 +11,7 @@ const requiredFields = {
     'origin', 'originCode', 'departureOffsetDays', 'returnOffsetDays', 'errorMessage'
   ],
   'web.infantsExceedAdults': [
-    'origin', 'originCode', 'destination', 'destinationCode', 'departureOffsetDays', 'adults'
+    'origin', 'originCode', 'destination', 'destinationCode', 'departureOffsetDays', 'adults', 'errorMessage'
   ],
   'web.incompleteSearch': ['missingField'],
   'web.multiCityBlankSearch': ['errorMessage'],
@@ -79,9 +79,11 @@ function getCases(path) {
         !Number.isInteger(testCase.departureOffsetDays) ||
         testCase.departureOffsetDays < 1 ||
         !Number.isInteger(testCase.adults) ||
-        testCase.adults < 1)) {
+        testCase.adults < 1 ||
+        typeof testCase.errorMessage !== 'string' ||
+        !testCase.errorMessage.trim())) {
       throw new Error(
-        `Test data "${path}" entry "${testCase.name}" must include locations, a future departure offset, and at least one adult.`
+        `Test data "${path}" entry "${testCase.name}" must include locations, a future departure offset, at least one adult, and an error message.`
       );
     }
 
