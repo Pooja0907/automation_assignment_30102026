@@ -3,8 +3,44 @@
     "flightSearch": [
       {
         "name": "Sydney to Melbourne",
+        "origin": "Sydney",
         "originCode": "SYD",
-        "destinationCode": "MEL"
+        "destination": "Melbourne",
+        "destinationCode": "MEL",
+        "departureOffsetDays": 14,
+        "returnOffsetDays": 21
+      }
+    ],
+    "flightSearchSwap": [
+      {
+        "name": "Sydney to Melbourne reversed to Melbourne to Sydney",
+        "origin": "Sydney",
+        "originCode": "SYD",
+        "destination": "Melbourne",
+        "destinationCode": "MEL",
+        "departureOffsetDays": 14,
+        "returnOffsetDays": 21
+      }
+    ],
+    "sameOriginDestination": [
+      {
+        "name": "Sydney to Sydney",
+        "origin": "Sydney",
+        "originCode": "SYD",
+        "departureOffsetDays": 14,
+        "returnOffsetDays": 21,
+        "errorMessage": "Please enter unique 'From' and 'To' airports for flight ''."
+      }
+    ],
+    "infantsExceedAdults": [
+      {
+        "name": "One lap infant above one adult",
+        "origin": "Sydney",
+        "originCode": "SYD",
+        "destination": "Melbourne",
+        "destinationCode": "MEL",
+        "departureOffsetDays": 14,
+        "adults": 1
       }
     ],
     "incompleteSearch": [
@@ -15,6 +51,16 @@
       {
         "name": "Missing destination",
         "missingField": "destination"
+      },
+      {
+        "name": "Both origin and destination empty",
+        "missingField": "both"
+      }
+    ],
+    "multiCityBlankSearch": [
+      {
+        "name": "Blank multi-city search",
+        "errorMessage": "An error occurred while trying to perform your search"
       }
     ]
   },
