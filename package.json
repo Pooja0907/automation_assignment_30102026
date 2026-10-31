@@ -7,25 +7,24 @@
   },
   "scripts": {
     "setup": "node scripts/setup.mjs",
-    "test": "npm run test:api && npm run test:web",
-    "test:api": "mocha --require ./test/api/register.cjs --timeout 30000 \"test/specs/api/**/*.api.ts\"",
-    "test:web": "wdio run ./wdio.conf.ts",
-    "typecheck": "tsc --noEmit && tsc --noEmit --project tsconfig.api.json"
+    "test": "node scripts/run-tests.cjs all",
+    "test:api": "node scripts/run-tests.cjs api",
+    "test:web": "node scripts/run-tests.cjs web",
+    "test:api:run": "mocha --timeout 30000 --reporter allure-mocha --reporter-option resultsDir=./test_reports/allure-results \"test/specs/api/**/*.api.js\"",
+    "test:web:run": "wdio run ./wdio.conf.js",
+    "report:open": "allure open ./test_reports/allure-report"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.20",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^22.13.4",
+    "@wdio/allure-reporter": "^9.19.2",
     "@wdio/cli": "^9.19.2",
     "@wdio/globals": "^9.19.2",
     "@wdio/local-runner": "^9.19.2",
     "@wdio/mocha-framework": "^9.19.2",
     "@wdio/spec-reporter": "^9.19.2",
-    "@wdio/types": "^9.19.2",
+    "allure-commandline": "^2.46.1",
+    "allure-mocha": "^3.14.0",
     "chai": "^4.5.0",
     "dotenv": "^16.4.7",
-    "mocha": "^11.1.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "mocha": "^11.1.0"
   }
 }

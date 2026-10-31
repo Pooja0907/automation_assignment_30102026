@@ -1,10 +1,6 @@
-import { apiRequest } from './booking.client';
+const { apiRequest } = require('./booking.client');
 
-interface TokenResponse {
-  token?: unknown;
-}
-
-export async function createAuthToken(): Promise<string> {
+async function createAuthToken() {
   const username = process.env.RESTFUL_BOOKER_USERNAME?.trim();
   const password = process.env.RESTFUL_BOOKER_PASSWORD;
 
@@ -26,6 +22,8 @@ export async function createAuthToken(): Promise<string> {
   return response.body.token;
 }
 
-function isTokenResponse(value: unknown): value is TokenResponse {
+function isTokenResponse(value) {
   return typeof value === 'object' && value !== null && 'token' in value;
 }
+
+module.exports = { createAuthToken };

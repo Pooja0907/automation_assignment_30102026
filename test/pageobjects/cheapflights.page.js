@@ -1,11 +1,10 @@
-import { $, browser } from '@wdio/globals';
+const { $, browser } = require('@wdio/globals');
 
 const HOMEPAGE_LOGO = 'aria/Go to the cheapflights homepage';
 const SIGN_IN_BUTTON = 'aria/Sign in';
-const MELBOURNE_FLIGHT_LINK = 'a[href*="/flight-search/SYD-MEL/"]';
 
-export class CheapflightsPage {
-  async open(): Promise<void> {
+class CheapflightsPage {
+  async open() {
     await browser.url('/');
     await browser.execute(() => window.scrollTo(0, 0));
   }
@@ -18,14 +17,18 @@ export class CheapflightsPage {
     return $(SIGN_IN_BUTTON);
   }
 
-  async openRecommendedMelbourneSearch(): Promise<void> {
-    const searchLink = $(MELBOURNE_FLIGHT_LINK);
+  get flightResults() {
+    return $('[role="group"][aria-label^="Result item"]');
+  }
+
+  async openRecommendedFlightSearch(originCode, destinationCode) {
+    const searchLink = $(`a[href*="/flight-search/${originCode}-${destinationCode}/"]`);
     await searchLink.waitForClickable({ timeout: 20_000 });
 
     const existingWindowHandles = await browser.getWindowHandles();
     await searchLink.click();
 
-    let resultsWindowHandle: string | undefined;
+    let resultsWindowHandle;
     await browser.waitUntil(
       async () => {
         const newWindowHandles = await browser.getWindowHandles();
@@ -52,4 +55,6 @@ export class CheapflightsPage {
   }
 }
 
-export const cheapflightsPage = new CheapflightsPage();
+const cheapflightsPage = new CheapflightsPage();
+
+module.exports = { CheapflightsPage, cheapflightsPage };

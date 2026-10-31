@@ -1,11 +1,12 @@
 # RELX Web & API Automation
 
-TypeScript test automation for the Cheapflights website and Restful Booker API, using WebdriverIO, Mocha, and Chai.
+JavaScript test automation for the Cheapflights website and Restful Booker API, using WebdriverIO, Mocha, and Chai.
 
 ## Requirements
 
 - Git
 - Node.js 18.20.0 or newer, with npm
+- Java 8 or newer to generate the Allure HTML report
 - Internet access to install packages, download the browser on its first run, and access the test websites and API
 
 You do **not** need to install Chrome or ChromeDriver separately. WebdriverIO manages them for the browser tests.
@@ -30,22 +31,41 @@ Run both the API and browser test suites:
 npm test
 ```
 
-Or run a single suite:
+Or run a single suite (each command regenerates the Allure report for that run):
 
 ```powershell
 npm run test:api
 npm run test:web
 ```
 
-Type-check the TypeScript project:
+## Allure reports and failure screenshots
+
+Each test command generates an Allure HTML report at `test_reports/allure-report/index.html`. Browser test failures also save screenshots under `test_reports/screenshots/` and attach them to their Allure test results. The test commands create the report and screenshot folders automatically. Generated files are excluded from Git.
+
+Open the latest report with:
 
 ```sh
-npm run typecheck
+npm run report:open
 ```
 
-The browser and WebdriverIO configuration uses modern `Bundler` module resolution. API tests run through Mocha and ts-node in CommonJS mode, so they have a dedicated `tsconfig.api.json`; `npm run typecheck` checks both configurations.
-
 The first browser test run may take longer while WebdriverIO downloads Chrome and its matching driver.
+
+## Data-driven tests
+
+Test inputs live in [test/data/test-data.json](./test/data/test-data.json), grouped by scenario. Add as many named entries as needed to a scenario's array; the runner creates a separate test for each entry. Keep each entry's properties consistent with its existing examples. Booking payloads must contain all Restful Booker fields. Flight-search airport codes must have a matching recommended route on the configured Cheapflights homepage. Do not put credentials in the JSON file; API credentials belong in `.env`.
+
+The grouped arrays cover valid and malformed booking creation, boundary-value creation, retrieving existing and missing bookings, authorized updates, unauthorized updates/deletes, authorized deletion, flight searches, and incomplete searches. Header visibility/layout cases do not require input data.
+
+| JSON array | Required entry properties |
+|---|---|
+| `web.flightSearch` | `name`, `originCode`, `destinationCode` |
+| `web.incompleteSearch` | `name`, `missingField` (`origin` or `destination`) |
+| `api.createValid`, `api.createBoundary`, `api.getExisting`, `api.delete`, `api.deleteUnauthorized` | `name`, `booking` (complete booking payload) |
+| `api.createInvalid` | `name`, `payload` (intentionally invalid booking request) |
+| `api.getMissing` | `name`, `bookingId` |
+| `api.update`, `api.updateUnauthorized`, `api.updateInvalidToken` | `name`, `initialBooking`, `updatedBooking`; `api.updateInvalidToken` also requires `token` |
+
+A booking payload contains `firstname`, `lastname`, `totalprice`, `depositpaid`, `bookingdates.checkin`, `bookingdates.checkout`, and `additionalneeds`. The loader validates required fields and booking shapes before the suites start.
 
 ## Configuration
 
@@ -63,7 +83,9 @@ Edit `.env` to override these values. Do not commit real credentials. The Restfu
 ## What is covered
 
 - Cheapflights homepage logo and sign-in visibility, including their relative position in the header.
-- A recommended Sydney-to-Melbourne flight search and assertions on its results page.
-- Restful Booker create, update, retrieve, and delete booking requests, response fields, malformed input, missing bookings, and unauthorized operations.
+- Data-driven recommended flight searches, result-card visibility, and prevention of submitting searches with a missing origin or destination.
+- Restful Booker create, update, retrieve, and delete booking requests; response fields and persistence; malformed input; missing bookings; unauthorized operations; and valid boundary values.
 
 API tests create and clean up their own booking data. Browser tests require the external Cheapflights site and API tests require the external Restful Booker service to be reachable.
+
+See [TEST_CASES.md](./TEST_CASES.md) for the assessment scenarios and their automation status.

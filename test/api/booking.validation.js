@@ -1,28 +1,4 @@
-export interface BookingDates {
-  checkin: string;
-  checkout: string;
-}
-
-export interface BookingPayload {
-  firstname: string;
-  lastname: string;
-  totalprice: number;
-  depositpaid: boolean;
-  bookingdates: BookingDates;
-  additionalneeds: string;
-}
-
-export interface CreatedBookingResponse {
-  bookingid: number;
-  booking: BookingPayload;
-}
-
-export interface ApiResponse {
-  status: number;
-  body: unknown;
-}
-
-export function isBookingPayload(value: unknown): value is BookingPayload {
+function isBookingPayload(value) {
   if (!isRecord(value) || !isRecord(value.bookingdates)) {
     return false;
   }
@@ -38,7 +14,7 @@ export function isBookingPayload(value: unknown): value is BookingPayload {
   );
 }
 
-export function isCreatedBookingResponse(value: unknown): value is CreatedBookingResponse {
+function isCreatedBookingResponse(value) {
   return (
     isRecord(value) &&
     typeof value.bookingid === 'number' &&
@@ -48,6 +24,8 @@ export function isCreatedBookingResponse(value: unknown): value is CreatedBookin
   );
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
+function isRecord(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
+
+module.exports = { isBookingPayload, isCreatedBookingResponse };

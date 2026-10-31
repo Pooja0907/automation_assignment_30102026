@@ -2,45 +2,47 @@
 
 ## Assessment Scope
 
-- Implement the web assessment for `https://www.cheapflights.com.au/`: verify the logo and login control are visible, exercise flight search, and assert meaningful search results.
-- Implement the Restful Booker booking API assessment using `https://restful-booker.herokuapp.com`: cover CreateBooking, UpdateBooking, GetBooking, and DeleteBooking.
-- Include positive and negative cases, assert API response fields, and check web element position or layout using stable relative assertions rather than brittle exact pixel coordinates.
+- Test the Cheapflights website at `https://www.cheapflights.com.au/`: verify the logo and sign-in control, exercise flight search, and assert meaningful results and relative layout.
+- Test the Restful Booker API at `https://restful-booker.herokuapp.com`: cover CreateBooking, UpdateBooking, GetBooking, and DeleteBooking with positive, negative, and boundary scenarios.
+- Use stable, user-facing selectors and observable behavior; avoid brittle pixel coordinates and incidental implementation details.
 
 ## Architecture
 
 - Keep browser specs in `test/specs/web/` and API specs in `test/specs/api/`.
-- Put browser selectors and user-facing interactions in `test/pageobjects/`; keep reusable UI pieces in `test/pageobjects/components/`.
-- Keep API request helpers and shared API types in `test/api/`, and reusable test data in `test/fixtures/`.
-- Keep test cases focused on behavior and assertions; avoid duplicating page or request logic across specs.
+- Put browser selectors and interactions in `test/pageobjects/`; put shared UI components in `test/pageobjects/components/`.
+- Keep API request helpers and response validation in `test/api/`, and reusable test data in `test/fixtures/`.
+- Store data-driven inputs in grouped arrays in `test/data/test-data.json`; add one test execution per entry instead of hardcoding test values in specs.
+- Use JavaScript and CommonJS modules throughout the project. WebdriverIO is the browser automation framework.
+- Keep tests focused on behavior; avoid duplicating page or request logic across specs.
 
-## TypeScript and Test Conventions
+## JavaScript and Test Conventions
 
-- Use TypeScript with strict typing, async/await, and the existing Mocha and Chai setup.
-- Use WebdriverIO for browser interaction. Prefer stable, user-facing selectors and assert observable behavior rather than implementation details.
-- Validate API status codes and response fields, including returned booking data. Make negative tests assert the expected error status or response.
-- Give each API test the data and booking it needs; avoid order-dependent tests and clean up created resources where the API allows it.
-- Read URLs and credentials from environment variables. Never commit secrets, tokens, or real account credentials; use `.env.example` only for documenting variable names.
+- Use modern JavaScript, async/await, and the existing Mocha and Chai setup.
+- Validate API status codes and response fields, including returned booking data. Negative tests must assert expected error responses.
+- Give each API test the booking data it needs. Keep tests independent of execution order and clean up created resources.
+- Read URLs and credentials from environment variables. Never commit secrets, tokens, or real account credentials; use `.env.example` only to document variable names.
+- Guard nullable or optional values before accessing nested properties, and validate external API response shapes at runtime.
 
 ## Coding Standards
 
-- Keep code concise, clear, and focused on one responsibility. Prefer straightforward control flow and descriptive names over clever or overly generic abstractions.
-- Avoid redundant logic and duplicated test setup. Extract a helper only when it improves clarity or reuse without hiding important test behavior.
-- Prefer simple, memory-efficient approaches; avoid retaining unnecessary data or building large intermediate collections.
-- Use TypeScript types and strict null checks to make invalid states harder to represent. Check optional values and API response shapes before accessing nested properties.
-- Handle expected runtime failures explicitly. Assert and report actionable context when browser actions, API requests, parsing, or cleanup fail; do not silently swallow exceptions or convert failures into passing defaults.
-- Keep comments short and useful: explain intent, constraints, or non-obvious decisions rather than restating the code.
-- Avoid magic values. Name meaningful timeouts, URLs, and test data, and centralize shared configuration where it improves consistency.
-- Keep tests deterministic and isolated. Use explicit waits for observable conditions instead of fixed sleeps, and avoid dependence on execution order or shared mutable state.
-- Make assertions specific enough to identify what failed, while avoiding brittle checks tied to incidental implementation details.
-- Make the smallest change that fully solves the problem, and update directly related tests when behavior changes.
+- Before implementing a requested requirement or change, ask the user to clarify any ambiguity in scope, expected behavior, or edge cases; wait for their answer before proceeding. Do not guess when clarification is needed.
+- Keep code concise, clear, and focused on one responsibility. Prefer straightforward control flow and descriptive names.
+- Avoid redundant logic and duplicated setup. Extract helpers only when they improve clarity or reuse without hiding behavior.
+- Prefer simple, memory-efficient approaches; do not retain unnecessary data or build large intermediate collections.
+- Handle expected runtime failures explicitly. Report actionable context when browser actions, API requests, parsing, or cleanup fail; do not swallow exceptions or turn failures into passing defaults.
+- Keep comments crisp and understandable. Explain intent or non-obvious constraints rather than restating code.
+- Avoid magic values. Name meaningful timeouts, URLs, and test data; centralize shared configuration when it improves consistency.
+- Keep tests deterministic and isolated. Wait for observable conditions rather than using fixed sleeps.
+- Make assertions specific and useful without coupling them to incidental details.
 
 ## Commands
 
-- Set up a fresh clone with `npm run setup`; this installs the locked dependencies and creates `.env` from `.env.example` without replacing an existing `.env`.
+- Set up a fresh clone with `npm run setup`; this checks Node.js, creates `.env` from `.env.example` without replacing an existing file, and installs locked dependencies.
 - Install locked dependencies manually with `npm ci`.
 - Run API tests with `npm run test:api`.
 - Run browser tests with `npm run test:web`.
 - Run both suites with `npm test`.
-- Run `npm run typecheck` to validate both the browser/bundler and API/Node16 TypeScript configurations.
-- WebdriverIO manages the Chrome browser and driver for browser tests; an internet connection is required the first time they are run.
+- Test execution generates an Allure report at `test_reports/allure-report/index.html`; failure screenshots are stored in `test_reports/screenshots/`.
+- Keep scenario-specific inputs in `test/data/test-data.json`, not in test code.
+- WebdriverIO manages Chrome and its driver; internet access is required on the first browser run.
 - Do not claim tests pass unless the relevant command has been run successfully.

@@ -1,6 +1,6 @@
-import { expect } from 'chai';
-import { cheapflightsPage } from '../../pageobjects/cheapflights.page';
-import { siteHeader } from '../../pageobjects/components/site-header.component';
+const { expect } = require('chai');
+const { cheapflightsPage } = require('../../pageobjects/cheapflights.page');
+const { siteHeader } = require('../../pageobjects/components/site-header.component');
 
 describe('Cheapflights header', function () {
   beforeEach(async function () {

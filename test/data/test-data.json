@@ -1,0 +1,221 @@
+{
+  "web": {
+    "flightSearch": [
+      {
+        "name": "Sydney to Melbourne",
+        "originCode": "SYD",
+        "destinationCode": "MEL"
+      }
+    ],
+    "incompleteSearch": [
+      {
+        "name": "Missing origin",
+        "missingField": "origin"
+      },
+      {
+        "name": "Missing destination",
+        "missingField": "destination"
+      }
+    ]
+  },
+  "api": {
+    "createValid": [
+      {
+        "name": "Standard booking",
+        "booking": {
+          "firstname": "RELX",
+          "lastname": "Automation",
+          "totalprice": 247,
+          "depositpaid": true,
+          "bookingdates": {
+            "checkin": "2027-01-10",
+            "checkout": "2027-01-15"
+          },
+          "additionalneeds": "Breakfast"
+        }
+      },
+      {
+        "name": "Booking without extra needs",
+        "booking": {
+          "firstname": "Casey",
+          "lastname": "Taylor",
+          "totalprice": 510,
+          "depositpaid": false,
+          "bookingdates": {
+            "checkin": "2027-03-05",
+            "checkout": "2027-03-12"
+          },
+          "additionalneeds": ""
+        }
+      }
+    ],
+    "createInvalid": [
+      {
+        "name": "Empty request",
+        "payload": {}
+      },
+      {
+        "name": "Missing booking dates",
+        "payload": {
+          "firstname": "Invalid",
+          "lastname": "Booking",
+          "totalprice": 100,
+          "depositpaid": true,
+          "additionalneeds": "None"
+        }
+      }
+    ],
+    "createBoundary": [
+      {
+        "name": "Zero price and year boundary",
+        "booking": {
+          "firstname": "Boundary",
+          "lastname": "Zero",
+          "totalprice": 0,
+          "depositpaid": false,
+          "bookingdates": {
+            "checkin": "2027-12-31",
+            "checkout": "2028-01-01"
+          },
+          "additionalneeds": ""
+        }
+      }
+    ],
+    "getExisting": [
+      {
+        "name": "Retrieve standard booking",
+        "booking": {
+          "firstname": "Get",
+          "lastname": "Booking",
+          "totalprice": 200,
+          "depositpaid": true,
+          "bookingdates": {
+            "checkin": "2027-05-01",
+            "checkout": "2027-05-04"
+          },
+          "additionalneeds": "Parking"
+        }
+      }
+    ],
+    "getMissing": [
+      {
+        "name": "Zero booking id",
+        "bookingId": 0
+      }
+    ],
+    "update": [
+      {
+        "name": "Update standard booking",
+        "initialBooking": {
+          "firstname": "Before",
+          "lastname": "Update",
+          "totalprice": 247,
+          "depositpaid": true,
+          "bookingdates": {
+            "checkin": "2027-06-01",
+            "checkout": "2027-06-05"
+          },
+          "additionalneeds": "Breakfast"
+        },
+        "updatedBooking": {
+          "firstname": "After",
+          "lastname": "Update",
+          "totalprice": 350,
+          "depositpaid": false,
+          "bookingdates": {
+            "checkin": "2027-06-10",
+            "checkout": "2027-06-15"
+          },
+          "additionalneeds": "Window seat"
+        }
+      }
+    ],
+    "updateUnauthorized": [
+      {
+        "name": "Update without token",
+        "initialBooking": {
+          "firstname": "Before",
+          "lastname": "Unauthorized",
+          "totalprice": 247,
+          "depositpaid": true,
+          "bookingdates": {
+            "checkin": "2027-07-01",
+            "checkout": "2027-07-03"
+          },
+          "additionalneeds": "Breakfast"
+        },
+        "updatedBooking": {
+          "firstname": "Unauthorized",
+          "lastname": "Changed",
+          "totalprice": 247,
+          "depositpaid": true,
+          "bookingdates": {
+            "checkin": "2027-07-01",
+            "checkout": "2027-07-03"
+          },
+          "additionalneeds": "Breakfast"
+        }
+      }
+    ],
+    "updateInvalidToken": [
+      {
+        "name": "Update with invalid token",
+        "initialBooking": {
+          "firstname": "Before",
+          "lastname": "InvalidToken",
+          "totalprice": 247,
+          "depositpaid": true,
+          "bookingdates": {
+            "checkin": "2027-08-01",
+            "checkout": "2027-08-03"
+          },
+          "additionalneeds": "Breakfast"
+        },
+        "updatedBooking": {
+          "firstname": "Invalid",
+          "lastname": "Token",
+          "totalprice": 500,
+          "depositpaid": false,
+          "bookingdates": {
+            "checkin": "2027-08-10",
+            "checkout": "2027-08-12"
+          },
+          "additionalneeds": "None"
+        },
+        "token": "invalid-token"
+      }
+    ],
+    "delete": [
+      {
+        "name": "Delete standard booking",
+        "booking": {
+          "firstname": "Delete",
+          "lastname": "Booking",
+          "totalprice": 300,
+          "depositpaid": true,
+          "bookingdates": {
+            "checkin": "2027-09-01",
+            "checkout": "2027-09-04"
+          },
+          "additionalneeds": "Late checkout"
+        }
+      }
+    ],
+    "deleteUnauthorized": [
+      {
+        "name": "Delete without token",
+        "booking": {
+          "firstname": "Keep",
+          "lastname": "Booking",
+          "totalprice": 180,
+          "depositpaid": false,
+          "bookingdates": {
+            "checkin": "2027-10-01",
+            "checkout": "2027-10-02"
+          },
+          "additionalneeds": "None"
+        }
+      }
+    ]
+  }
+}
