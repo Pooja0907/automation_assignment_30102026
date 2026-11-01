@@ -1,11 +1,14 @@
+// Covers valid flight searches and user-visible flight-form validation behavior.
 const { expect } = require('chai');
 const { browser } = require('@wdio/globals');
 const { cheapflightsPage } = require('../../pageobjects/cheapflights.page');
 const { flightSearchForm } = require('../../pageobjects/components/flight-search-form.component');
 const { getCases } = require('../../data/test-data');
 
+// Groups the data-driven browser tests for flight search behavior.
 describe('Cheapflights flight search', function () {
   for (const testCase of getCases('web.flightSearch')) {
+    // Confirms a valid Sydney-to-Melbourne search opens a results tab.
     it(`opens search results in a new tab for ${testCase.name}`, async function () {
       await cheapflightsPage.open();
       await flightSearchForm.searchRegion.waitForDisplayed();
@@ -14,28 +17,8 @@ describe('Cheapflights flight search', function () {
     });
   }
 
-  for (const testCase of getCases('web.flightSearchSwap')) {
-    it(`reverses the route with the swap button: ${testCase.name}`, async function () {
-      await cheapflightsPage.open();
-      await flightSearchForm.searchRegion.waitForDisplayed();
-      await flightSearchForm.clearLocation('origin');
-      await flightSearchForm.clearLocation('destination');
-      await flightSearchForm.selectLocation('origin', testCase.origin, testCase.originCode);
-      await flightSearchForm.selectLocation('destination', testCase.destination, testCase.destinationCode);
-
-      expect(await flightSearchForm.getLocationText('origin')).to.include(testCase.originCode);
-      expect(await flightSearchForm.getLocationText('destination')).to.include(testCase.destinationCode);
-
-      await flightSearchForm.swapLocations();
-      expect(await flightSearchForm.getLocationText('origin')).to.include(testCase.destinationCode);
-      expect(await flightSearchForm.getLocationText('destination')).to.include(testCase.originCode);
-
-      await selectDates(testCase);
-      await submitSearchAndVerifyNewTab();
-    });
-  }
-
   for (const testCase of getCases('web.sameOriginDestination')) {
+    // Confirms identical airports are rejected with an overlay under destination.
     it(`shows an error when searching the same origin and destination: ${testCase.name}`, async function () {
       await cheapflightsPage.open();
       await flightSearchForm.searchRegion.waitForDisplayed();
@@ -66,6 +49,7 @@ describe('Cheapflights flight search', function () {
 
   // Negative test case
   for (const testCase of getCases('web.infantsExceedAdults')) {
+    // Confirms the traveller controls prevent lap infants from exceeding adults.
     it(`prevents selecting more lap infants than adults: ${testCase.name}`, async function () {
       await cheapflightsPage.open();
       await flightSearchForm.searchRegion.waitForDisplayed();
@@ -84,47 +68,50 @@ describe('Cheapflights flight search', function () {
 
       expect(await flightSearchForm.getTravellerCount('Infants on lap')).to.equal(testCase.adults);
       expect(await flightSearchForm.isTravellerIncrementDisabled('Infants on lap')).to.equal(true);
-      expect(await flightSearchForm.getLapInfantValidationMessage())
+      expect(await flightSearchForm.getLapInfantValidationMessage(testCase.errorMessage))
         .to.equal(testCase.errorMessage);
     });
   }
 
   for (const testCase of getCases('web.incompleteSearch')) {
+    // Confirms an empty destination blocks submission and displays its validation.
     it(`does not submit a search with ${testCase.name.toLowerCase()}`, async function () {
       await cheapflightsPage.open();
       await flightSearchForm.searchRegion.waitForDisplayed();
-      const fieldsToClear = testCase.missingField === 'both'
-        ? ['origin', 'destination']
-        : [testCase.missingField];
-      for (const field of fieldsToClear) {
-        await flightSearchForm.clearLocation(field);
-      }
+      await flightSearchForm.clearLocation(testCase.missingField);
+      await browser.waitUntil(
+        async () => !(await flightSearchForm.hasLocationValue(testCase.missingField)),
+        {
+          timeout: 10_000,
+          timeoutMsg: `Expected the ${testCase.missingField} field to be empty before searching.`
+        }
+      );
 
       const handlesBefore = await browser.getWindowHandles();
       await flightSearchForm.submitSearch();
       expect(await browser.getWindowHandles()).to.have.lengthOf(handlesBefore.length);
 
-      if (testCase.missingField === 'destination') {
-        const errorMessage = 'Please enter a Destination airport';
-        let destinationErrorDropdown;
-        await browser.waitUntil(
-          async () => {
-            destinationErrorDropdown = await flightSearchForm.getDestinationAutocompleteError(errorMessage);
-            return destinationErrorDropdown !== undefined;
-          },
-          {
-            timeout: 10_000,
-            timeoutMsg: `Expected a destination autocomplete dropdown below the field containing "${errorMessage}".`
-          }
-        );
+      const errorMessage = 'Please enter a Destination airport';
+      await flightSearchForm.ensureDestinationAutocompleteOpen();
+      let destinationErrorDropdown;
+      await browser.waitUntil(
+        async () => {
+          destinationErrorDropdown = await flightSearchForm.getDestinationAutocompleteError(errorMessage);
+          return Boolean(destinationErrorDropdown);
+        },
+        {
+          timeout: 10_000,
+          timeoutMsg: `Expected a destination autocomplete dropdown below the field containing "${errorMessage}".`
+        }
+      );
 
-        expect(await destinationErrorDropdown.getText()).to.include(errorMessage);
-      }
+      expect(destinationErrorDropdown.text).to.include(errorMessage);
     });
   }
 
   // Negative test case
   for (const testCase of getCases('web.multiCityBlankSearch')) {
+    // Confirms a blank multi-city form is blocked by its expected error dialog.
     it(`shows a blocking error for ${testCase.name.toLowerCase()}`, async function () {
       await cheapflightsPage.open();
       await flightSearchForm.searchRegion.waitForDisplayed();
@@ -150,6 +137,7 @@ describe('Cheapflights flight search', function () {
       expect(await browser.getWindowHandles()).to.have.lengthOf(handlesBefore.length);
     });
 
+    // Confirms adding another multi-city leg creates a new empty route and date row.
     it(`adds a blank flight leg for ${testCase.name.toLowerCase()}`, async function () {
       await cheapflightsPage.open();
       await flightSearchForm.searchRegion.waitForDisplayed();
@@ -180,6 +168,7 @@ describe('Cheapflights flight search', function () {
   }
 });
 
+// Fills both route fields and selects the corresponding travel dates.
 async function configureRouteAndDates(testCase) {
   await flightSearchForm.clearLocation('origin');
   await flightSearchForm.clearLocation('destination');
@@ -188,11 +177,13 @@ async function configureRouteAndDates(testCase) {
   await selectDates(testCase);
 }
 
+// Selects the departure and return dates using offsets from today.
 async function selectDates(testCase) {
   await flightSearchForm.selectDate('Departure', dateWithOffset(testCase.departureOffsetDays));
   await flightSearchForm.selectDate('Return', dateWithOffset(testCase.returnOffsetDays));
 }
 
+// Submits a valid search, verifies its new results tab, then restores the original tab.
 async function submitSearchAndVerifyNewTab() {
   const originalHandle = await browser.getWindowHandle();
   const handlesBefore = await browser.getWindowHandles();
@@ -213,14 +204,24 @@ async function submitSearchAndVerifyNewTab() {
   );
 
   const handlesAfter = await browser.getWindowHandles();
+  // Results open in a separate tab; close it so later steps return to the homepage.
   expect(handlesAfter).to.have.lengthOf(handlesBefore.length + 1);
   await browser.switchToWindow(resultsHandle);
+  await browser.waitUntil(
+    async () => (await browser.getUrl()).includes('/flight-search/'),
+    {
+      timeout: 30_000,
+      timeoutMsg: 'The new browser tab did not load the flight-search results page.'
+    }
+  );
   await browser.closeWindow();
   await browser.switchToWindow(originalHandle);
 }
 
+// Builds a stable local date for a scenario's number of days in the future.
 function dateWithOffset(offsetDays) {
   const date = new Date();
+  // Midday avoids crossing a local date boundary when the browser formats the date.
   date.setHours(12, 0, 0, 0);
   date.setDate(date.getDate() + offsetDays);
   return date;

@@ -1,3 +1,5 @@
+// Runtime guards for the response shapes exercised by the API specs.
+// Checks that a value contains every required booking field with the right type.
 function isBookingPayload(value) {
   if (!isRecord(value) || !isRecord(value.bookingdates)) {
     return false;
@@ -14,6 +16,7 @@ function isBookingPayload(value) {
   );
 }
 
+// Validates the identifier and booking object returned after creation.
 function isCreatedBookingResponse(value) {
   return (
     isRecord(value) &&
@@ -24,6 +27,7 @@ function isCreatedBookingResponse(value) {
   );
 }
 
+// Identifies non-null, non-array objects before their fields are inspected.
 function isRecord(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

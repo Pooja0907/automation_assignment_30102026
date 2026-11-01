@@ -1,5 +1,7 @@
+// Authenticates with the configured demo API and validates the returned token.
 const { apiRequest } = require('./booking.client');
 
+// Requests and validates an authentication token for protected API operations.
 async function createAuthToken() {
   const username = process.env.RESTFUL_BOOKER_USERNAME?.trim();
   const password = process.env.RESTFUL_BOOKER_PASSWORD;
@@ -22,6 +24,7 @@ async function createAuthToken() {
   return response.body.token;
 }
 
+// Confirms an API response is an object containing a token field.
 function isTokenResponse(value) {
   return typeof value === 'object' && value !== null && 'token' in value;
 }

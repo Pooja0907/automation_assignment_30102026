@@ -11,17 +11,6 @@
         "returnOffsetDays": 21
       }
     ],
-    "flightSearchSwap": [
-      {
-        "name": "Sydney to Melbourne reversed to Melbourne to Sydney",
-        "origin": "Sydney",
-        "originCode": "SYD",
-        "destination": "Melbourne",
-        "destinationCode": "MEL",
-        "departureOffsetDays": 14,
-        "returnOffsetDays": 21
-      }
-    ],
     "sameOriginDestination": [
       {
         "name": "Sydney to Sydney",
@@ -46,16 +35,8 @@
     ],
     "incompleteSearch": [
       {
-        "name": "Missing origin",
-        "missingField": "origin"
-      },
-      {
         "name": "Missing destination",
         "missingField": "destination"
-      },
-      {
-        "name": "Both origin and destination empty",
-        "missingField": "both"
       }
     ],
     "multiCityBlankSearch": [

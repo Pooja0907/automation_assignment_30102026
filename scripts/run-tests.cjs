@@ -1,8 +1,10 @@
+// Runs the selected suites and regenerates a clean Allure report for this invocation.
 const { mkdirSync, rmSync } = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const {
   ensureReportDirectories,
+  printTestCaseSummary,
   reportDirectory,
   screenshotDirectory
 } = require('./test-report-utils.cjs');
@@ -68,3 +70,5 @@ if (reportResult.error || reportResult.status !== 0) {
   console.log(`Allure report generated at ${path.join(htmlReportDirectory, 'index.html')}`);
   process.exitCode = testFailure ? 1 : 0;
 }
+
+printTestCaseSummary(resultsDirectory);

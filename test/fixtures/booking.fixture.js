@@ -1,7 +1,9 @@
+// Creates isolated API test records and removes them during test cleanup.
 const { createBooking, deleteBooking } = require('../api/booking.client');
 const { createAuthToken } = require('../api/auth.client');
 const { isCreatedBookingResponse } = require('../api/booking.validation');
 
+// Creates a booking and returns its id together with the original payload.
 async function createBookingFixture(booking) {
   if (!booking || typeof booking !== 'object') {
     throw new Error('A booking payload is required to create a booking fixture.');
@@ -16,6 +18,7 @@ async function createBookingFixture(booking) {
   return { bookingId: response.body.bookingid, booking };
 }
 
+// Authenticates and removes a fixture booking during cleanup.
 async function deleteBookingFixture(bookingId) {
   const token = await createAuthToken();
   const response = await deleteBooking(bookingId, token);

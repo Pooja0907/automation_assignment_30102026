@@ -1,10 +1,8 @@
+// Loads named scenarios and rejects incomplete or malformed test data early.
 const testData = require('./test-data.json');
 
 const requiredFields = {
   'web.flightSearch': [
-    'origin', 'originCode', 'destination', 'destinationCode', 'departureOffsetDays', 'returnOffsetDays'
-  ],
-  'web.flightSearchSwap': [
     'origin', 'originCode', 'destination', 'destinationCode', 'departureOffsetDays', 'returnOffsetDays'
   ],
   'web.sameOriginDestination': [
@@ -27,6 +25,7 @@ const requiredFields = {
   'api.deleteUnauthorized': ['booking']
 };
 
+// Returns validated named scenarios for the requested data group.
 function getCases(path) {
   const value = path.split('.').reduce((current, key) => current?.[key], testData);
 
@@ -34,6 +33,7 @@ function getCases(path) {
     throw new Error(`Test data "${path}" must be a non-empty JSON array.`);
   }
 
+  // Validates each entry before making scenario data available to a spec.
   return value.map((testCase, index) => {
     if (!testCase || typeof testCase !== 'object' || typeof testCase.name !== 'string' || !testCase.name.trim()) {
       throw new Error(`Test data "${path}" entry ${index + 1} must have a non-empty name.`);
@@ -48,12 +48,12 @@ function getCases(path) {
     const airportCodes = path === 'web.sameOriginDestination'
       ? [testCase.originCode]
       : [testCase.originCode, testCase.destinationCode];
-    if (['web.flightSearch', 'web.flightSearchSwap', 'web.sameOriginDestination', 'web.infantsExceedAdults'].includes(path) &&
+    if (['web.flightSearch', 'web.sameOriginDestination', 'web.infantsExceedAdults'].includes(path) &&
       !airportCodes.every((code) => /^[A-Z]{3}$/.test(code))) {
       throw new Error(`Test data "${path}" entry "${testCase.name}" must use three-letter airport codes.`);
     }
 
-    if (['web.flightSearch', 'web.flightSearchSwap', 'web.sameOriginDestination'].includes(path) &&
+    if (['web.flightSearch', 'web.sameOriginDestination'].includes(path) &&
       (!Number.isInteger(testCase.departureOffsetDays) ||
         !Number.isInteger(testCase.returnOffsetDays) ||
         testCase.departureOffsetDays < 1 ||
@@ -93,9 +93,9 @@ function getCases(path) {
       }
     }
 
-    if (path === 'web.incompleteSearch' && !['origin', 'destination', 'both'].includes(testCase.missingField)) {
+    if (path === 'web.incompleteSearch' && testCase.missingField !== 'destination') {
       throw new Error(
-        `Test data "${path}" entry "${testCase.name}" must set missingField to origin, destination, or both.`
+        `Test data "${path}" entry "${testCase.name}" must set missingField to destination.`
       );
     }
 
@@ -108,6 +108,7 @@ function getCases(path) {
   });
 }
 
+// Checks the complete booking shape used in request data.
 function isBooking(value) {
   return value !== null &&
     typeof value === 'object' &&

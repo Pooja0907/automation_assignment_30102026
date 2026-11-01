@@ -1,3 +1,4 @@
+// Prepares a fresh checkout without replacing local environment configuration.
 import { copyFileSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
@@ -42,6 +43,7 @@ if (install.status !== 0) {
   process.exitCode = install.status ?? 1;
 }
 
+// Compares numeric version components to enforce the minimum Node.js version.
 function compareVersions(left, right) {
   for (let index = 0; index < right.length; index += 1) {
     const difference = (left[index] ?? 0) - right[index];

@@ -1,18 +1,23 @@
+// Checks homepage branding visibility and the sign-in control's header placement.
 const { expect } = require('chai');
 const { cheapflightsPage } = require('../../pageobjects/cheapflights.page');
 const { siteHeader } = require('../../pageobjects/components/site-header.component');
 
+// Groups homepage header visibility and layout checks.
 describe('Cheapflights header', function () {
+  // Loads the homepage and waits for its header before each assertion.
   beforeEach(async function () {
     await cheapflightsPage.open();
     await siteHeader.banner.waitForDisplayed();
   });
 
+  // Confirms the Cheapflights logo is visible on the homepage.
   it('displays the homepage logo', async function () {
     await cheapflightsPage.logo.waitForDisplayed();
     expect(await cheapflightsPage.logo.isDisplayed()).to.equal(true);
   });
 
+  // Confirms sign-in is right of the logo and remains within the header.
   it('displays the sign-in control in the header to the right of the logo', async function () {
     const logo = cheapflightsPage.logo;
     const signIn = cheapflightsPage.signInButton;

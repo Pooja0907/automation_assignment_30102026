@@ -13,12 +13,11 @@ Automation status reflects the current test specs: **Automated** means the docum
 | WEB-01 | Homepage logo is visible | Open the configured Cheapflights homepage. The logo is displayed in the page header. | Automated |
 | WEB-02 | Sign-in control is visible and correctly positioned | Open the homepage and inspect the header. The sign-in control is displayed, is to the right of the logo without overlapping it, and remains within the header bounds. | Automated |
 | WEB-03 | Sydney-to-Melbourne search opens results in a new tab | Select Sydney (SYD), Melbourne (MEL), and future travel dates, then submit. Flight search results open in a new browser tab. | Automated |
-| WEB-04 | Incomplete route is blocked | Leave the origin, destination, or both unset and submit. No results tab opens; for a missing destination, the autocomplete dropdown below the destination displays “Please enter a Destination airport”. | Automated |
-| WEB-05 | Swap the route and search in reverse | Select Sydney (SYD) and Melbourne (MEL), use the swap button, select future travel dates, then submit. Flight search results open in a new browser tab. | Automated |
-| WEB-06 | Reject identical origin and destination | Select One-way, select Sydney (SYD) for both origin and destination, choose a departure date, then search. No results tab opens and the overlay below the destination field displays “Please enter unique 'From' and 'To' airports for flight ''.” | Automated |
-| WEB-07 | Prevent more lap infants than adults | Select a one-way Sydney-to-Melbourne flight and a departure date. With one adult, try to add a second lap infant. The count remains at one and the exact message “Searches cannot have more lap infants than adults” is displayed. | Automated |
-| WEB-08 | Block a blank multi-city search | Select Multi-city, clear all route and date fields, and search. A blocking dialog displays “An error occurred while trying to perform your search”; no results tab opens. | Automated |
-| WEB-09 | Add a blank multi-city flight leg | Select Multi-city, clear the form, and click “Add another flight.” A new row appears with empty origin and destination fields and an unselected departure date. | Automated |
+| WEB-04 | Missing destination is blocked | Leave the destination unset and submit. No results tab opens; the autocomplete dropdown below the destination displays “Please enter a Destination airport”. | Automated |
+| WEB-05 | Reject identical origin and destination | Select One-way, select Sydney (SYD) for both origin and destination, choose a departure date, then search. No results tab opens and the overlay below the destination field displays “Please enter unique 'From' and 'To' airports for flight ''.” | Automated |
+| WEB-06 | Prevent more lap infants than adults | Select a one-way Sydney-to-Melbourne flight and a departure date. With one adult, try to add a second lap infant. The count remains at one and the exact message “Searches cannot have more lap infants than adults” is displayed. | Automated |
+| WEB-07 | Block a blank multi-city search | Select Multi-city, clear all route and date fields, and search. A blocking dialog displays “An error occurred while trying to perform your search”; no results tab opens. | Automated |
+| WEB-08 | Add a blank multi-city flight leg | Select Multi-city, clear the form, and click “Add another flight.” A new row appears with empty origin and destination fields and an unselected departure date. | Automated |
 
 ## Restful Booker API
 

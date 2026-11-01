@@ -1,14 +1,18 @@
+// Covers successful, malformed, and boundary-value booking creation.
 const { expect } = require('chai');
 const { createBooking, deleteBooking } = require('../../api/booking.client');
 const { createAuthToken } = require('../../api/auth.client');
 const { isCreatedBookingResponse } = require('../../api/booking.validation');
 const { getCases } = require('../../data/test-data');
 
+// Groups data-driven creation scenarios and their cleanup behavior.
 describe('CreateBooking API', function () {
   for (const testCase of getCases('api.createValid')) {
+    // Gives each valid booking scenario its own isolated lifecycle.
     describe(testCase.name, function () {
       let bookingId;
 
+      // Removes a booking created by the test to keep the shared API clean.
       afterEach(async function () {
         if (bookingId !== undefined) {
           const token = await createAuthToken();
@@ -18,6 +22,7 @@ describe('CreateBooking API', function () {
         }
       });
 
+      // Verifies creation returns an id and preserves every submitted field.
       it('creates a booking and returns its id and all fields', async function () {
         const response = await createBooking(testCase.booking);
 
@@ -33,6 +38,7 @@ describe('CreateBooking API', function () {
   }
 
   for (const testCase of getCases('api.createInvalid')) {
+    // Confirms malformed payloads are rejected without creating a booking.
     it(`rejects a malformed booking request: ${testCase.name}`, async function () {
       const response = await createBooking(testCase.payload);
 
@@ -42,9 +48,11 @@ describe('CreateBooking API', function () {
   }
 
   for (const testCase of getCases('api.createBoundary')) {
+    // Isolates cleanup for each boundary-value booking scenario.
     describe(testCase.name, function () {
       let bookingId;
 
+      // Removes the boundary-value booking after its response has been checked.
       afterEach(async function () {
         if (bookingId !== undefined) {
           const token = await createAuthToken();
@@ -54,6 +62,7 @@ describe('CreateBooking API', function () {
         }
       });
 
+      // Confirms valid boundary values are stored and returned unchanged.
       it('preserves valid boundary values', async function () {
         const response = await createBooking(testCase.booking);
 
